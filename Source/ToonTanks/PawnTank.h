@@ -8,6 +8,7 @@
 
 class UCameraComponent;
 class USpringArmComponent;
+class UHealthComponent;
 
 /**
  * 
@@ -25,6 +26,8 @@ class TOONTANKS_API APawnTank : public APawnBase
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	bool GetPlayerAlive();
 
 	private:
 
@@ -50,6 +53,8 @@ class TOONTANKS_API APawnTank : public APawnBase
 	float MoveSpeed = 100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement", meta = (AllowPrivateAccess = "true"))
 	float RotateSpeed = 100.f;
+
+	bool bAlive = true;
 
 protected:
 	// Called when the game starts or when spawned

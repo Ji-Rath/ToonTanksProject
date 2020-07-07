@@ -15,7 +15,7 @@ void APawnTurret::CheckFireCondition()
 	//If player is dead, then stop!
 	if(!Player) {return;}
 	// If player is in range, shoot
-	if(GetDistanceToPlayer() <= FireRange)
+	if(GetDistanceToPlayer() <= FireRange && Player->GetPlayerAlive())
 	{
 		// fire weapon
 		Fire();
@@ -45,6 +45,8 @@ void APawnTurret::HandleDestruction()
 	Super::HandleDestruction();
 
 	//Handle destruction-
+
+	Destroy();
 }
 
 // Called every frame

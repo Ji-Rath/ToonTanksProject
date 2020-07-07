@@ -50,6 +50,9 @@ void APawnTank::HandleDestruction()
 {
 	Super::HandleDestruction();
 
+	bAlive = false;
+	SetActorHiddenInGame(true);
+	SetActorTickEnabled(false);
 	//handle destruction
 }
 
@@ -79,4 +82,9 @@ void APawnTank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("MoveForward", this, &APawnTank::CalculateMoveInput);
 	PlayerInputComponent->BindAxis("Turn", this, &APawnTank::CalculateRotateInput);
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APawnTank::Fire);
+}
+
+bool APawnTank::GetPlayerAlive()
+{
+	return bAlive;
 }

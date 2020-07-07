@@ -5,6 +5,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "ProjectileBase.h"
+#include "HealthComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APawnBase::APawnBase()
@@ -24,6 +26,8 @@ APawnBase::APawnBase()
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("Projectile Spawn Point"));
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 
+	HealthComponent = CreateDefaultSubobject<UHealthComponent>("Health Component");
+
 }
 
 void APawnBase::RotateTurret(FVector LookAtTarget)
@@ -41,7 +45,7 @@ void APawnBase::Fire()
 	if (Projectile)
 	{
 		AProjectileBase* TempProjectile = GetWorld()->SpawnActor<AProjectileBase>(Projectile, ProjectileSpawnPoint->GetComponentLocation(), ProjectileSpawnPoint->GetComponentRotation());
-		UE_LOG(LogTemp, Log, TEXT("Fire!"));
+		//UE_LOG(LogTemp, Log, TEXT("Fire!"));
 		TempProjectile->SetOwner(this);
 	}
 }
@@ -49,8 +53,23 @@ void APawnBase::Fire()
 void APawnBase::HandleDestruction()
 {
 	//sound effects, particles
+	if (DeathParticle)
+	{
+		UGameplayStatics::SpawnEmitterAtLocation(this, DeathParticle, GetActorLocation(), FRotator::ZeroRotator);
+	}
+	if (DeathSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
+	}
+	if (DeathShake)
+	{
+		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(DeathShake);
+	}
 
-	//When PawnTurret dead, notify gamemode, destroy actor
 
-	//When PawnTank dead, inform gamemode, hide all components/stop movement input
+}
+
+void APawnBase::PawnDestroyed()
+{
+	HandleDestruction();
 }
